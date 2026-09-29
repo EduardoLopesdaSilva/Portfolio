@@ -264,9 +264,36 @@
     </article>
   </section>
 
+  <script>
+    // Diagnóstico global: evita uma tela preta silenciosa.
+    window.addEventListener('error', function (event) {
+      var box = document.getElementById('threeStatus');
+      if (!box) return;
+      var strong = box.querySelector('strong');
+      var span = box.querySelector('span');
+      box.classList.add('fallback');
+      if (strong) strong.textContent = 'Erro ao iniciar o quarto 3D';
+      if (span) {
+        var locationText = event.filename
+          ? ' — linha ' + (event.lineno || '?') + ', coluna ' + (event.colno || '?')
+          : '';
+        span.textContent = (event.message || 'Erro desconhecido') + locationText;
+      }
+    });
+
+    window.addEventListener('unhandledrejection', function (event) {
+      var box = document.getElementById('threeStatus');
+      if (!box) return;
+      var strong = box.querySelector('strong');
+      var span = box.querySelector('span');
+      box.classList.add('fallback');
+      if (strong) strong.textContent = 'Erro ao iniciar o quarto 3D';
+      if (span) span.textContent = String(event.reason && (event.reason.message || event.reason) || 'Promise rejeitada');
+    });
+  </script>
   <script type="module">
-    import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.160.1/build/three.module.js';
-    import { OrbitControls } from 'https://cdn.jsdelivr.net/npm/three@0.160.1/examples/jsm/controls/OrbitControls.js';
+    import * as THREE from 'https://esm.sh/three@0.160.1?bundle';
+    import { OrbitControls } from 'https://esm.sh/three@0.160.1/examples/jsm/controls/OrbitControls.js?bundle';
 
     const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || (window.innerWidth <= 768);
     const highDPI = window.devicePixelRatio > 1.75;
