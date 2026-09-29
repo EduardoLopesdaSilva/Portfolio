@@ -123,7 +123,10 @@ body.touch #joystick-container,body.touch .mobile-action{display:block}
 .dialog{width:90vw;padding:24px 18px}.salva-hero{min-height:190px}}
 @media(max-width:768px) and (orientation:portrait){
 .rotate-overlay{display:grid}#joystick-container,.mobile-action{display:none!important}}
-/* ===== Só mobile/touch: joystick simples de dedo + balão do Sims menor ===== */
+/* Balão do Sims menor em todas as telas */
+.sims-bubble{max-width:150px;padding:5px 10px;border-width:2px;border-radius:12px;font-size:11px;font-weight:600;line-height:1.25;box-shadow:0 4px 10px rgba(0,0,0,.35)}
+.sims-bubble::after{width:9px;height:9px;bottom:-6px;border-width:2px}
+/* ===== Só mobile/touch: joystick simples de dedo + balão do Sims ainda menor ===== */
 @media (pointer:coarse), (max-width:900px){
 #joystick-container{left:18px;bottom:22px;width:96px;height:96px}
 .joystick-base{border:2px solid rgba(255,255,255,.35);background:rgba(255,255,255,.12);box-shadow:none;backdrop-filter:none}
@@ -484,9 +487,6 @@ if (renderer) {
       if (m === 'chair') { if (deskSequence === 'idle' || deskSequence === 'cue') startDeskSequence(); }
       else if (m === 'music') toggleMusic();
       else if (m) open(m);
-    } else {
-      const ground = ray.intersectObject(floor)[0];
-      if (ground) target = ground.point;
     }
   });
 
