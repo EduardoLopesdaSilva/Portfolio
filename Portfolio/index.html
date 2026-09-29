@@ -123,6 +123,16 @@ body.touch #joystick-container,body.touch .mobile-action{display:block}
 .dialog{width:90vw;padding:24px 18px}.salva-hero{min-height:190px}}
 @media(max-width:768px) and (orientation:portrait){
 .rotate-overlay{display:grid}#joystick-container,.mobile-action{display:none!important}}
+/* ===== Só mobile/touch: joystick simples de dedo + balão do Sims menor ===== */
+@media (pointer:coarse), (max-width:900px){
+#joystick-container{left:18px;bottom:22px;width:96px;height:96px}
+.joystick-base{border:2px solid rgba(255,255,255,.35);background:rgba(255,255,255,.12);box-shadow:none;backdrop-filter:none}
+.joystick-base.active{border-color:rgba(255,255,255,.7);background:rgba(255,255,255,.22);box-shadow:none}
+.joystick-thumb{width:42px;height:42px;border:0;background:rgba(255,255,255,.8);box-shadow:none}
+.mobile-action{width:64px;height:64px;right:18px;bottom:22px;font-size:11px}
+.sims-bubble{max-width:130px;padding:4px 8px;border-width:1.5px;border-radius:10px;font-size:9px;font-weight:600;line-height:1.25;box-shadow:0 3px 8px rgba(0,0,0,.35)}
+.sims-bubble::after{width:8px;height:8px;bottom:-5px;border-width:1.5px}
+}
 </style>
 </head>
 <body>
