@@ -8,545 +8,119 @@
   <style>
     @import url('https://fonts.googleapis.com/css2?family=DM+Mono&family=Outfit:wght@400;500;600;700;800&display=swap');
 
-    :root {
-      --cyan: #64e9ff;
-      --purple: #b592ff;
-      --ink: #070a12;
-      --line: #c4eaff44;
-      --text: #f7f9ff;
-      --muted: #bdc5d2;
-    }
+    :root { --cyan: #64e9ff; --purple: #b592ff; --ink: #070a12; --line: #c4eaff44; --text: #f7f9ff; --muted: #bdc5d2; }
+    * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+    body { margin: 0; overflow: hidden; background: var(--ink); font-family: 'Outfit', sans-serif; color: var(--text); user-select: none; -webkit-user-select: none; }
+    canvas { display: block; width: 100vw; height: 100vh; }
 
-    * {
-      box-sizing: border-box;
-      -webkit-tap-highlight-color: transparent;
-    }
+    .brand { position: fixed; z-index: 3; left: clamp(14px, 4vw, 45px); top: 20px; pointer-events: none; }
+    .brand small, .eyebrow { font: 11px 'DM Mono', monospace; letter-spacing: .15em; color: var(--cyan); }
+    h1 { margin: 6px 0; font-size: clamp(22px, 4vw, 42px); line-height: .95; letter-spacing: -.05em; }
+    .brand p { max-width: 245px; margin: 10px 0; color: #e2e5ec; font-size: 13px; }
 
-    body {
-      margin: 0;
-      overflow: hidden;
-      background: var(--ink);
-      font-family: 'Outfit', sans-serif;
-      color: var(--text);
-      user-select: none;
-      -webkit-user-select: none;
-    }
-
-    canvas {
-      display: block;
-      width: 100vw;
-      height: 100vh;
-    }
-
-    .brand {
-      position: fixed;
-      z-index: 3;
-      left: clamp(14px, 4vw, 45px);
-      top: 20px;
-      pointer-events: none;
-    }
-
-    .brand small,
-    .eyebrow {
-      font: 11px 'DM Mono', monospace;
-      letter-spacing: .15em;
-      color: var(--cyan);
-    }
-
-    h1 {
-      margin: 6px 0;
-      font-size: clamp(22px, 4vw, 42px);
-      line-height: .95;
-      letter-spacing: -.05em;
-    }
-
-    .brand p {
-      max-width: 245px;
-      margin: 10px 0;
-      color: #e2e5ec;
-      font-size: 13px;
-    }
-
-    .tools {
-      position: fixed;
-      z-index: 4;
-      right: clamp(14px, 4vw, 45px);
-      top: 20px;
-      display: flex;
-      gap: 8px;
-      align-items: center;
-    }
-
-    .tool,
-    .palette button {
-      border: 1px solid var(--line);
-      border-radius: 10px;
-      background: #0b1120d9;
-      color: #fff;
-      backdrop-filter: blur(8px);
-      cursor: pointer;
-    }
-
-    .tool {
-      padding: 10px 14px;
-      font: 600 clamp(11px, 2vw, 13px) 'Outfit', sans-serif;
-    }
-
-    .tool:hover,
-    .palette button:hover {
-      border-color: var(--cyan);
-      box-shadow: 0 0 16px #64e9ff44;
-    }
-
-    .palette {
-      display: flex;
-      gap: 5px;
-      padding: 5px;
-      border: 1px solid var(--line);
-      border-radius: 10px;
-      background: #0b1120d9;
-    }
-
-    .palette button {
-      width: 28px;
-      height: 28px;
-      padding: 0;
-      border-radius: 6px;
-    }
-
+    .tools { position: fixed; z-index: 4; right: clamp(14px, 4vw, 45px); top: 20px; display: flex; gap: 8px; align-items: center; }
+    .tool, .palette button { border: 1px solid var(--line); border-radius: 10px; background: #0b1120d9; color: #fff; backdrop-filter: blur(8px); cursor: pointer; }
+    .tool { padding: 10px 14px; font: 600 clamp(11px, 2vw, 13px) 'Outfit', sans-serif; }
+    .tool:hover, .palette button:hover { border-color: var(--cyan); box-shadow: 0 0 16px #64e9ff44; }
+    .palette { display: flex; gap: 5px; padding: 5px; border: 1px solid var(--line); border-radius: 10px; background: #0b1120d9; }
+    .palette button { width: 28px; height: 28px; padding: 0; border-radius: 6px; }
     .palette button[title="Minimalista Quente"] { background: #d3a66e; }
     .palette button[title="Nordic Sage"] { background: #9fb9a5; }
     .palette button[title="Cyber Dark"] { background: linear-gradient(135deg, #754ed8, #249ace); }
 
-    .legend {
-      position: fixed;
-      z-index: 3;
-      left: 50%;
-      bottom: 25px;
-      transform: translateX(-50%);
-      padding: 9px 18px;
-      border: 1px solid var(--line);
-      border-radius: 20px;
-      background: #0b1120e0;
-      backdrop-filter: blur(8px);
-      font: 600 clamp(11px, 1.8vw, 13px) 'DM Mono', monospace;
-      white-space: nowrap;
-      pointer-events: none;
-      box-shadow: 0 4px 15px rgba(0,0,0,0.4);
-    }
+    .legend { position: fixed; z-index: 3; left: 50%; bottom: 25px; transform: translateX(-50%); padding: 9px 18px; border: 1px solid var(--line); border-radius: 20px; background: #0b1120e0; backdrop-filter: blur(8px); font: 600 clamp(11px, 1.8vw, 13px) 'DM Mono', monospace; white-space: nowrap; pointer-events: none; box-shadow: 0 4px 15px rgba(0,0,0,.4); }
+    .guide { position: fixed; z-index: 3; left: clamp(14px, 3vw, 40px); bottom: 23px; display: flex; align-items: center; gap: 10px; pointer-events: none; }
+    .face { width: 52px; height: 52px; border: 2px solid var(--cyan); border-radius: 50%; background: radial-gradient(circle at 50% 42%, #222 0 6%, transparent 7%), linear-gradient(145deg, #d6a07b 48%, #1a1e2b 49%); box-shadow: 0 0 16px #64e9ff66; }
+    .bubble { padding: 8px 12px; border: 1px solid var(--line); border-radius: 0 12px 12px 12px; background: #0b1120dc; font-size: 12px; }
 
-    .guide {
-      position: fixed;
-      z-index: 3;
-      left: clamp(14px, 3vw, 40px);
-      bottom: 23px;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      pointer-events: none;
-    }
-
-    .face {
-      width: 52px;
-      height: 52px;
-      border: 2px solid var(--cyan);
-      border-radius: 50%;
-      background: radial-gradient(circle at 50% 42%, #222 0 6%, transparent 7%), linear-gradient(145deg, #d6a07b 48%, #1a1e2b 49%);
-      box-shadow: 0 0 16px #64e9ff66;
-    }
-
-    .bubble {
-      padding: 8px 12px;
-      border: 1px solid var(--line);
-      border-radius: 0 12px 12px 12px;
-      background: #0b1120dc;
-      font-size: 12px;
-    }
-
-    /* Sims Bubble Responsivo & Escala Otimizada para Mobile */
-    .sims-bubble {
-      position: fixed;
-      left: 0;
-      top: 0;
-      z-index: 99;
-      max-width: clamp(220px, 70vw, 320px);
-      padding: clamp(10px, 2vw, 14px) clamp(14px, 3vw, 18px);
-      border: 2.5px solid #ffffffd0;
-      border-radius: 20px;
-      background: linear-gradient(135deg, #ffffff 0%, #e0f7fc 100%);
-      box-shadow: 0 10px 28px rgba(0, 0, 0, 0.4), inset 0 2px 0 #fff;
-      color: #0d1b2a;
-      font-family: 'Outfit', sans-serif;
-      font-weight: 700;
-      font-size: clamp(13px, 2.5vw, 16px);
-      line-height: 1.35;
-      text-align: center;
-      pointer-events: none;
-      opacity: 0;
-      will-change: transform, opacity;
-      transition: opacity 0.2s ease;
-    }
-
-    .sims-bubble::after {
-      content: '';
-      position: absolute;
-      left: 50%;
-      bottom: -10px;
-      width: 16px;
-      height: 16px;
-      transform: translateX(-50%) rotate(45deg);
-      border-right: 2.5px solid #ffffffd0;
-      border-bottom: 2.5px solid #ffffffd0;
-      background: #e0f7fc;
-    }
-
+    .sims-bubble { position: fixed; left: 0; top: 0; z-index: 99; max-width: clamp(220px, 70vw, 320px); padding: clamp(10px, 2vw, 14px) clamp(14px, 3vw, 18px); border: 2.5px solid #ffffffd0; border-radius: 20px; background: linear-gradient(135deg, #fff 0%, #e0f7fc 100%); box-shadow: 0 10px 28px rgba(0,0,0,.4), inset 0 2px 0 #fff; color: #0d1b2a; font-family: 'Outfit', sans-serif; font-weight: 700; font-size: clamp(13px, 2.5vw, 16px); line-height: 1.35; text-align: center; pointer-events: none; opacity: 0; will-change: transform, opacity; transition: opacity .2s ease; }
+    .sims-bubble::after { content: ''; position: absolute; left: 50%; bottom: -10px; width: 16px; height: 16px; transform: translateX(-50%) rotate(45deg); border-right: 2.5px solid #ffffffd0; border-bottom: 2.5px solid #ffffffd0; background: #e0f7fc; }
     .talk .face { animation: talk .42s infinite alternate; }
     .talk .bubble { border-color: var(--cyan); }
     @keyframes talk { to { transform: translateY(-3px); } }
 
-    /* Modais & Air Mail Estilo Vintage Responsivos (Até 90vw no Paisagem) */
-    .modal {
-      position: fixed;
-      inset: 0;
-      z-index: 1000;
-      display: grid;
-      place-items: center;
-      padding: 15px;
-      opacity: 0;
-      pointer-events: none;
-      background: rgba(2, 4, 10, 0.75);
-      backdrop-filter: blur(0);
-      transition: opacity .25s ease, backdrop-filter .25s ease;
-    }
-
-    .modal.open {
-      opacity: 1;
-      pointer-events: auto;
-      backdrop-filter: blur(10px);
-    }
-
-    .dialog {
-      position: relative;
-      width: min(90vw, 780px);
-      max-height: 88vh;
-      overflow-y: auto;
-      padding: clamp(20px, 4vw, 42px);
-      border: 1px solid #a9eaff55;
-      border-radius: 18px;
-      background: linear-gradient(135deg, #151d30fa, #090d18fa);
-      box-shadow: 0 30px 90px rgba(0,0,0,0.7);
-      transform: translateY(15px);
-      transition: transform .25s ease;
-    }
-
+    .modal { position: fixed; inset: 0; z-index: 1000; display: grid; place-items: center; padding: 15px; opacity: 0; pointer-events: none; background: rgba(2,4,10,.75); backdrop-filter: blur(0); transition: opacity .25s ease, backdrop-filter .25s ease; }
+    .modal.open { opacity: 1; pointer-events: auto; backdrop-filter: blur(10px); }
+    .dialog { position: relative; width: min(90vw, 780px); max-height: 88vh; overflow-y: auto; padding: clamp(20px, 4vw, 42px); border: 1px solid #a9eaff55; border-radius: 18px; background: linear-gradient(135deg, #151d30fa, #090d18fa); box-shadow: 0 30px 90px rgba(0,0,0,.7); transform: translateY(15px); transition: transform .25s ease; }
     .modal.open .dialog { transform: none; }
 
     .vintage-modal { transition: opacity .72s ease, backdrop-filter .45s ease; }
-    .vintage-modal .vintage-card {
-      width: min(90vw, 920px);
-      max-width: 90vw;
-      min-height: min(480px, 78vh);
-      max-height: 86vh;
-      overflow-y: auto;
-      padding: clamp(20px, 4vw, 44px);
-      border: clamp(6px, 1.5vw, 11px) solid transparent;
-      border-radius: 8px;
-      color: #352c21;
-      background:
-        linear-gradient(125deg, #fffbed 0%, #faf3e0 48%, #e9dcc5 100%) padding-box,
-        repeating-linear-gradient(45deg, #bd3541 0 12px, #fdf8e8 12px 18px, #235c9a 18px 30px, #fdf8e8 30px 36px) border-box;
-      box-shadow: 0 34px 100px rgba(0,0,0,0.75), inset 0 0 70px rgba(143, 117, 86, 0.12);
-      transform: perspective(1200px) rotateY(90deg) scale(.5);
-      opacity: 0;
-      transform-style: preserve-3d;
-      transition: transform .72s cubic-bezier(.22,.9,.22,1.15), opacity .35s ease;
-    }
-
-    .vintage-modal.open .vintage-card {
-      opacity: 1;
-      transform: perspective(1200px) rotateY(0deg) scale(1);
-    }
-
+    .vintage-modal .vintage-card { width: min(90vw, 920px); max-width: 90vw; min-height: min(480px, 78vh); max-height: 86vh; overflow-y: auto; padding: clamp(20px, 4vw, 44px); border: clamp(6px, 1.5vw, 11px) solid transparent; border-radius: 8px; color: #352c21; background: linear-gradient(125deg, #fffbed 0%, #faf3e0 48%, #e9dcc5 100%) padding-box, repeating-linear-gradient(45deg, #bd3541 0 12px, #fdf8e8 12px 18px, #235c9a 18px 30px, #fdf8e8 30px 36px) border-box; box-shadow: 0 34px 100px rgba(0,0,0,.75), inset 0 0 70px rgba(143,117,86,.12); transform: perspective(1200px) rotateY(90deg) scale(.5); opacity: 0; transform-style: preserve-3d; transition: transform .72s cubic-bezier(.22,.9,.22,1.15), opacity .35s ease; }
+    .vintage-modal.open .vintage-card { opacity: 1; transform: perspective(1200px) rotateY(0deg) scale(1); }
     .vintage-card { scrollbar-width: thin; scrollbar-color: #a66b4e #f3e6cf; }
     .vintage-card::-webkit-scrollbar { width: 8px; }
     .vintage-card::-webkit-scrollbar-track { background: #f3e6cf; border-radius: 12px; }
     .vintage-card::-webkit-scrollbar-thumb { background: linear-gradient(#bd3541, #315d93); border-radius: 12px; }
-
-    .vintage-card::before {
-      content: '✾ AIR MAIL · ED. LOPES · ✦';
-      position: absolute;
-      left: clamp(16px, 3vw, 30px);
-      top: 18px;
-      color: #806248;
-      font: 700 clamp(9px, 1.5vw, 11px) 'DM Mono', monospace;
-      letter-spacing: .15em;
-    }
-
-    .vintage-card .close {
-      z-index: 3;
-      border-color: #8b6a4e88;
-      color: #5e4632;
-      background: #fff9e9cc;
-    }
-
+    .vintage-card::before { content: '✾ AIR MAIL · ED. LOPES · ✦'; position: absolute; left: clamp(16px, 3vw, 30px); top: 18px; color: #806248; font: 700 clamp(9px, 1.5vw, 11px) 'DM Mono', monospace; letter-spacing: .15em; }
+    .vintage-card .close { z-index: 3; border-color: #8b6a4e88; color: #5e4632; background: #fff9e9cc; }
     .vintage-copy { max-width: 64%; padding-top: 32px; position: relative; z-index: 1; }
     .vintage-copy p { color: #536270; line-height: 1.65; font-size: clamp(13px, 1.8vw, 16px); }
-    .airmail-header { display:flex; align-items:center; gap:8px; color:#6c5844; font:700 clamp(10px, 1.5vw, 12px) 'DM Mono',monospace; letter-spacing:.16em; }
-    .airmail-header::before { content:'✦'; color:#bb4e4f; font-size:14px; }
-    .airmail-title { display:inline-block; max-width:100%; margin:14px 0 8px; padding:8px 12px; border:1px dashed #9a7351; color:#765038; font:700 clamp(13px, 2.5vw, 18px) 'DM Mono',monospace; letter-spacing:.09em; line-height:1.25; transform:rotate(-1deg); background:#fffaf0a8; }
-    .vintage-note { margin-top:16px; padding:12px 14px; border-left:3px solid #c64b4f; background:#fffaf0a6; font: italic clamp(13px, 1.8vw, 15px) Georgia, serif; color:#5d4434; }
-    .vintage-card .links { position:relative; z-index:2; }
-    .vintage-card .link { border-color:#8e715766; background:#fffdf2a8; color:#3e3328; }
+    .airmail-header { display: flex; align-items: center; gap: 8px; color: #6c5844; font: 700 clamp(10px, 1.5vw, 12px) 'DM Mono', monospace; letter-spacing: .16em; }
+    .airmail-header::before { content: '✦'; color: #bb4e4f; font-size: 14px; }
+    .airmail-title { display: inline-block; max-width: 100%; margin: 14px 0 8px; padding: 8px 12px; border: 1px dashed #9a7351; color: #765038; font: 700 clamp(13px, 2.5vw, 18px) 'DM Mono', monospace; letter-spacing: .09em; line-height: 1.25; transform: rotate(-1deg); background: #fffaf0a8; }
+    .vintage-note { margin-top: 16px; padding: 12px 14px; border-left: 3px solid #c64b4f; background: #fffaf0a6; font: italic clamp(13px, 1.8vw, 15px) Georgia, serif; color: #5d4434; }
+    .vintage-card .links { position: relative; z-index: 2; }
+    .vintage-card .link { border-color: #8e715766; background: #fffdf2a8; color: #3e3328; }
+    .vintage-art { position: absolute; right: -2px; top: 0; width: 35%; height: 100%; padding: 72px 30px 30px 78px; display: grid; place-items: center; color: #244d68; background: linear-gradient(135deg, #d9d1b7cc, #f7efd9e8), repeating-linear-gradient(20deg, transparent 0 17px, #6e8da822 18px 19px); clip-path: polygon(12% 0,100% 0,100% 100%,0 100%,9% 93%,2% 86%,10% 78%,3% 69%,11% 60%,3% 50%,11% 40%,3% 30%,10% 20%,2% 10%); }
+    .vintage-art::before { content: '✾'; position: absolute; left: 34px; top: 42px; color: #a66357; font-size: 48px; transform: rotate(-18deg); text-shadow: 14px 18px #b8966244; }
+    .vintage-art::after { content: '⚓ · ✦'; position: absolute; right: 25px; bottom: 27px; color: #49677a; font-size: 24px; letter-spacing: .25em; }
+    .map-lines { width: 140px; height: 180px; border: 2px solid #355b713d; border-radius: 44% 53% 40% 57%; transform: rotate(16deg); box-shadow: inset 16px -22px #7d9ba51c, 12px 10px #8b624c22; position: relative; }
+    .map-lines::before, .map-lines::after { content: ''; position: absolute; inset: 28% -15% auto; height: 2px; background: #39627b80; transform: rotate(-34deg); }
+    .map-lines::after { inset: 52% -20% auto; transform: rotate(29deg); background: #aa685b80; }
+    .vintage-card .grid { position: relative; z-index: 2; grid-template-columns: 1fr 1fr; }
+    .vintage-card .card { background: #fffaf0ad; border-color: #9b7f6652; color: #463729; box-shadow: 0 5px 12px #785c3b13; }
+    .vintage-card .card h3 { color: #84543d; }
+    .vintage-card .tag { background: #a46c4b1c; color: #4c3b2c; }
 
-    .vintage-art {
-      position: absolute;
-      right: -2px;
-      top: 0;
-      width: 35%;
-      height: 100%;
-      padding: 72px 30px 30px 78px;
-      display: grid;
-      place-items: center;
-      color: #244d68;
-      background:
-        linear-gradient(135deg, #d9d1b7cc, #f7efd9e8),
-        repeating-linear-gradient(20deg, transparent 0 17px, #6e8da822 18px 19px);
-      clip-path: polygon(12% 0,100% 0,100% 100%,0 100%,9% 93%,2% 86%,10% 78%,3% 69%,11% 60%,3% 50%,11% 40%,3% 30%,10% 20%,2% 10%);
-    }
-
-    .vintage-art::before { content:'✾'; position:absolute; left:34px; top:42px; color:#a66357; font-size:48px; transform:rotate(-18deg); text-shadow:14px 18px #b8966244; }
-    .vintage-art::after { content:'⚓ · ✦'; position:absolute; right:25px; bottom:27px; color:#49677a; font-size:24px; letter-spacing:.25em; }
-    .map-lines { width:140px; height:180px; border:2px solid #355b713d; border-radius:44% 53% 40% 57%; transform:rotate(16deg); box-shadow: inset 16px -22px #7d9ba51c, 12px 10px #8b624c22; position:relative; }
-    .map-lines::before, .map-lines::after { content:''; position:absolute; inset:28% -15% auto; height:2px; background:#39627b80; transform:rotate(-34deg); }
-    .map-lines::after { inset:52% -20% auto; transform:rotate(29deg); background:#aa685b80; }
-    .vintage-card .grid { position:relative; z-index:2; grid-template-columns:1fr 1fr; }
-    .vintage-card .card { background:#fffaf0ad; border-color:#9b7f6652; color:#463729; box-shadow:0 5px 12px #785c3b13; }
-    .vintage-card .card h3 { color:#84543d; }
-    .vintage-card .tag { background:#a46c4b1c; color:#4c3b2c; }
-
-    .close {
-      position: absolute;
-      right: 14px;
-      top: 14px;
-      width: 36px;
-      height: 36px;
-      border: 1px solid var(--line);
-      border-radius: 50%;
-      background: rgba(11,17,32,0.6);
-      color: white;
-      font-size: 22px;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
+    .close { position: absolute; right: 14px; top: 14px; width: 36px; height: 36px; border: 1px solid var(--line); border-radius: 50%; background: rgba(11,17,32,.6); color: #fff; font-size: 22px; cursor: pointer; display: flex; align-items: center; justify-content: center; }
     .close:hover { border-color: var(--cyan); color: var(--cyan); }
-
-    .dialog h2 {
-      margin: 8px 35px 16px 0;
-      font-size: clamp(22px, 3.5vw, 38px);
-      line-height: 1.05;
-      letter-spacing: -.04em;
-    }
-
+    .dialog h2 { margin: 8px 35px 16px 0; font-size: clamp(22px, 3.5vw, 38px); line-height: 1.05; letter-spacing: -.04em; }
     .dialog p { color: var(--muted); line-height: 1.6; font-size: clamp(13px, 1.8vw, 15px); }
-
     .grid, .salva-layout { display: grid; grid-template-columns: 1fr 1fr; gap: 11px; }
-
-    .card, .project {
-      padding: 16px;
-      border: 1px solid var(--line);
-      border-radius: 12px;
-      background: #080d1a8a;
-    }
-
+    .card, .project { padding: 16px; border: 1px solid var(--line); border-radius: 12px; background: #080d1a8a; }
     .card h3 { margin: 0 0 8px; color: var(--cyan); font-size: clamp(14px, 2vw, 18px); }
     .tag { display: inline-block; margin: 3px; padding: 5px 8px; border-radius: 5px; background: #6b91ba24; color: #deedff; font: 10px 'DM Mono', monospace; }
     .project { margin-bottom: 10px; }
     .project small { color: var(--purple); font: 10px 'DM Mono', monospace; }
     .project p { margin: 5px 0; }
     .links { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 20px; }
-    .link { padding: 9px 13px; border: 1px solid #64e9ff77; border-radius: 8px; background: #64e9ff15; color: white; text-decoration: none; font-size: 13px; font-weight: 600; }
-
+    .link { padding: 9px 13px; border: 1px solid #64e9ff77; border-radius: 8px; background: #64e9ff15; color: #fff; text-decoration: none; font-size: 13px; font-weight: 600; }
     .slots { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
     .slot { display: grid; place-items: center; min-height: 80px; padding: 8px; border: 1px dashed #bdc5d288; border-radius: 8px; color: var(--muted); font-size: 11px; text-align: center; }
-
-    .salva-hero {
-      min-height: 220px;
-      padding: 24px;
-      border-radius: 12px;
-      background: linear-gradient(125deg, #081526, #991719bb), linear-gradient(#123, #d31);
-      position: relative;
-      overflow: hidden;
-    }
+    .salva-hero { min-height: 220px; padding: 24px; border-radius: 12px; background: linear-gradient(125deg, #081526, #991719bb), linear-gradient(#123, #d31); position: relative; overflow: hidden; }
     .salva-hero:before { content: '🚒'; position: absolute; right: -5px; bottom: -15px; font-size: 140px; opacity: .24; }
-    .salva-hero>* { position: relative; }
-
+    .salva-hero > * { position: relative; }
     .login { padding: 24px; border-radius: 12px; background: #f8fafc; color: #10213b; }
     .login .eyebrow { color: #d66e00; }
     .login p { color: #48556a; }
-    .login button { width: 100%; padding: 13px; border: 0; border-radius: 8px; background: #061b36; color: white; font-weight: 800; cursor: pointer; }
+    .login button { width: 100%; padding: 13px; border: 0; border-radius: 8px; background: #061b36; color: #fff; font-weight: 800; cursor: pointer; }
 
-    .player-ui {
-      position: fixed;
-      z-index: 5;
-      right: 25px;
-      bottom: 25px;
-      width: 225px;
-      padding: 12px;
-      border: 1px solid var(--line);
-      border-radius: 13px;
-      background: #0b1120e8;
-      backdrop-filter: blur(10px);
-      display: none;
-    }
+    .player-ui { position: fixed; z-index: 5; right: 25px; bottom: 25px; width: 225px; padding: 12px; border: 1px solid var(--line); border-radius: 13px; background: #0b1120e8; backdrop-filter: blur(10px); display: none; }
     .player-ui.show { display: block; }
     .player-row { display: flex; align-items: center; gap: 9px; font-size: 12px; }
     .music-btn { border: 0; background: #64e9ff22; color: var(--cyan); width: 30px; height: 30px; border-radius: 50%; cursor: pointer; }
     .bar { height: 4px; background: #ffffff25; border-radius: 5px; overflow: hidden; margin-top: 10px; }
     .bar i { display: block; width: 0; height: 100%; background: var(--cyan); transition: .1s; }
 
-    /* Roblox Standard Mobile Joystick & Action Button (80x80px) */
-    .mobile-controls, #joystick-container {
-      position: fixed;
-      z-index: 99999;
-      display: none;
-      left: 24px;
-      bottom: 24px;
-      width: 140px;
-      height: 140px;
-      pointer-events: auto;
-      touch-action: none;
-      user-select: none;
-    }
+    .mobile-controls, #joystick-container { position: fixed; z-index: 99999; display: none; left: 24px; bottom: 24px; width: 140px; height: 140px; pointer-events: auto; touch-action: none; user-select: none; }
+    .joystick-base { position: relative; width: 100%; height: 100%; border: 2px solid rgba(100,233,255,.4); border-radius: 50%; background: radial-gradient(circle at 35% 35%, rgba(255,255,255,.18), rgba(10,23,43,.8)); box-shadow: inset 0 0 25px rgba(100,233,255,.2), 0 8px 25px rgba(0,0,0,.5); backdrop-filter: blur(8px); touch-action: none; transition: border-color .2s ease, box-shadow .2s ease; }
+    .joystick-base.active { border-color: rgba(100,233,255,.95); box-shadow: inset 0 0 35px rgba(100,233,255,.45), 0 0 30px rgba(100,233,255,.5); }
+    .joystick-thumb { position: absolute; left: 50%; top: 50%; width: 60px; height: 60px; border: 2px solid rgba(215,248,255,.9); border-radius: 50%; background: radial-gradient(circle at 35% 35%, rgba(255,255,255,.95), rgba(56,135,167,.88)); box-shadow: 0 4px 16px rgba(0,0,0,.5), inset 0 2px 2px rgba(255,255,255,.8); transform: translate(-50%, -50%); pointer-events: none; }
+    .mobile-action { position: fixed; z-index: 99999; display: none; right: 24px; bottom: 24px; width: 80px; height: 80px; border-radius: 50%; border: 2px solid rgba(190,238,255,.6); background: radial-gradient(circle at 35% 35%, rgba(20,40,70,.88), rgba(8,19,37,.96)); color: #fff; box-shadow: 0 8px 24px rgba(0,0,0,.5), inset 0 1px 1px rgba(255,255,255,.4); backdrop-filter: blur(10px); font: 800 14px/1.1 'Outfit', sans-serif; letter-spacing: .05em; cursor: pointer; user-select: none; touch-action: manipulation; text-align: center; }
+    .mobile-action::before { content: ''; position: absolute; inset: -12px; border-radius: 50%; }
+    .mobile-action:active { background: rgba(100,233,255,.4); transform: scale(.94); }
+    .mobile-action.ready { border-color: var(--cyan); background: radial-gradient(circle at 35% 35%, rgba(100,233,255,.5), rgba(12,40,70,.95)); box-shadow: 0 0 32px rgba(100,233,255,.85), 0 8px 24px rgba(0,0,0,.5); animation: actionPulse .9s infinite alternate ease-in-out; }
+    @keyframes actionPulse { to { transform: scale(1.08); filter: brightness(1.25); } }
+    body.touch .mobile-controls, body.touch .mobile-action { display: block; }
 
-    .joystick-base {
-      position: relative;
-      width: 100%;
-      height: 100%;
-      border: 2px solid rgba(100, 233, 255, 0.4);
-      border-radius: 50%;
-      background: radial-gradient(circle at 35% 35%, rgba(255, 255, 255, 0.18), rgba(10, 23, 43, 0.8));
-      box-shadow: inset 0 0 25px rgba(100, 233, 255, 0.2), 0 8px 25px rgba(0, 0, 0, 0.5);
-      backdrop-filter: blur(8px);
-      touch-action: none;
-      transition: border-color 0.2s ease, box-shadow 0.2s ease;
-    }
-
-    .joystick-base.active {
-      border-color: rgba(100, 233, 255, 0.95);
-      box-shadow: inset 0 0 35px rgba(100, 233, 255, 0.45), 0 0 30px rgba(100, 233, 255, 0.5);
-    }
-
-    .joystick-thumb {
-      position: absolute;
-      left: 50%;
-      top: 50%;
-      width: 60px;
-      height: 60px;
-      border: 2px solid rgba(215, 248, 255, 0.9);
-      border-radius: 50%;
-      background: radial-gradient(circle at 35% 35%, rgba(255, 255, 255, 0.95), rgba(56, 135, 167, 0.88));
-      box-shadow: 0 4px 16px rgba(0,0,0,0.5), inset 0 2px 2px rgba(255, 255, 255, 0.8);
-      transform: translate(-50%, -50%);
-      pointer-events: none;
-    }
-
-    .mobile-action {
-      position: fixed;
-      z-index: 99999;
-      display: none;
-      right: 24px;
-      bottom: 24px;
-      width: 80px;
-      height: 80px;
-      border-radius: 50%;
-      border: 2px solid rgba(190, 238, 255, 0.6);
-      background: radial-gradient(circle at 35% 35%, rgba(20, 40, 70, 0.88), rgba(8, 19, 37, 0.96));
-      color: #ffffff;
-      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5), inset 0 1px 1px rgba(255, 255, 255, 0.4);
-      backdrop-filter: blur(10px);
-      font: 800 14px/1.1 'Outfit', sans-serif;
-      letter-spacing: 0.05em;
-      cursor: pointer;
-      -webkit-tap-highlight-color: transparent;
-      user-select: none;
-      touch-action: manipulation;
-      text-align: center;
-    }
-
-    .mobile-action::before {
-      content: '';
-      position: absolute;
-      inset: -12px;
-      border-radius: 50%;
-    }
-
-    .mobile-action:active { background: rgba(100, 233, 255, 0.4); transform: scale(0.94); }
-
-    .mobile-action.ready {
-      border-color: var(--cyan);
-      background: radial-gradient(circle at 35% 35%, rgba(100, 233, 255, 0.5), rgba(12, 40, 70, 0.95));
-      box-shadow: 0 0 32px rgba(100, 233, 255, 0.85), 0 8px 24px rgba(0, 0, 0, 0.5);
-      animation: actionPulse 0.9s infinite alternate ease-in-out;
-    }
-
-    @keyframes actionPulse {
-      to { transform: scale(1.08); filter: brightness(1.25); }
-    }
-
-    body.touch .mobile-controls,
-    body.touch .mobile-action {
-      display: block;
-    }
-
-    .exit-computer {
-      position: fixed;
-      z-index: 13;
-      top: 80px;
-      right: 20px;
-      display: none;
-      padding: 11px 16px;
-      border: 1px solid #bdeeff88;
-      border-radius: 10px;
-      background: #081325e6;
-      color: white;
-      box-shadow: 0 5px 18px rgba(0,0,0,0.6);
-      backdrop-filter: blur(8px);
-      font: 700 13px 'Outfit', sans-serif;
-      cursor: pointer;
-    }
-
+    .exit-computer { position: fixed; z-index: 13; top: 80px; right: 20px; display: none; padding: 11px 16px; border: 1px solid #bdeeff88; border-radius: 10px; background: #081325e6; color: #fff; box-shadow: 0 5px 18px rgba(0,0,0,.6); backdrop-filter: blur(8px); font: 700 13px 'Outfit', sans-serif; cursor: pointer; }
     .exit-computer.show { display: block; }
 
-    .rotate-overlay {
-      position: fixed;
-      z-index: 100000;
-      inset: 0;
-      display: none;
-      place-items: center;
-      padding: 24px;
-      background: radial-gradient(circle at center, #132544, #060913);
-      color: white;
-      text-align: center;
-    }
-
-    .rotate-overlay .rotate-card {
-      max-width: 320px;
-      padding: 30px 24px;
-      border: 1px solid #8ceeff66;
-      border-radius: 24px;
-      background: #101c31e6;
-      box-shadow: 0 0 40px rgba(100, 233, 255, 0.25);
-      font-size: 16px;
-      line-height: 1.45;
-    }
-
+    .rotate-overlay { position: fixed; z-index: 100000; inset: 0; display: none; place-items: center; padding: 24px; background: radial-gradient(circle at center, #132544, #060913); color: #fff; text-align: center; }
+    .rotate-overlay .rotate-card { max-width: 320px; padding: 30px 24px; border: 1px solid #8ceeff66; border-radius: 24px; background: #101c31e6; box-shadow: 0 0 40px rgba(100,233,255,.25); font-size: 16px; line-height: 1.45; }
     .rotate-icon { display: block; margin-bottom: 14px; color: var(--cyan); font-size: 48px; animation: rotatePhone 2s ease-in-out infinite; }
     @keyframes rotatePhone { 50% { transform: rotate(90deg); } }
 
-    /* Breakpoint Mobile / Responsividade */
     @media(max-width:768px) {
       .brand { top: 14px; }
       .brand p { display: none; }
@@ -565,7 +139,6 @@
       .dialog { width: 90vw; max-width: 90vw; padding: 24px 18px; }
       .salva-hero { min-height: 190px; }
     }
-
     @media(max-width:768px) and (orientation:portrait) {
       .rotate-overlay { display: grid; }
       .mobile-controls, .mobile-action { display: none !important; }
@@ -587,9 +160,7 @@
     <p>Explore, caminhe e descubra cada área.</p>
   </div>
   <div class="tools"><button class="tool" id="camera">◉ Alternar Câmera</button>
-    <div class="palette" aria-label="Temas do quarto"><button title="Minimalista Quente"
-        data-theme="warm"></button><button title="Nordic Sage" data-theme="sage"></button><button title="Cyber Dark"
-        data-theme="cyber"></button></div>
+    <div class="palette" aria-label="Temas do quarto"><button title="Minimalista Quente" data-theme="warm"></button><button title="Nordic Sage" data-theme="sage"></button><button title="Cyber Dark" data-theme="cyber"></button></div>
   </div>
   <div class="guide" id="guide">
     <div class="face"></div>
@@ -597,11 +168,9 @@
   </div>
   <div class="legend" id="legend">Clique em móveis ou aproxime-se e pressione E</div>
   <div class="sims-bubble" id="simsBubble">Eu sou Eduardo Lopes da Silva</div>
-  <!-- Vídeo em loop aplicado como VideoTexture ao monitor durante a sequência de mesa. -->
   <video id="projectVideo" muted loop playsinline preload="auto" crossorigin="anonymous" style="display:none" src="https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4"></video>
   <aside class="player-ui" id="musicPlayer">
-    <div class="player-row"><button class="music-btn" id="musicToggle">♫</button><b>Lofi room ambience</b><span
-        id="volume" style="margin-left:auto;color:var(--muted)">VOLUME</span></div>
+    <div class="player-row"><button class="music-btn" id="musicToggle">♫</button><b>Lofi room ambience</b><span id="volume" style="margin-left:auto;color:var(--muted)">VOLUME</span></div>
     <div class="bar"><i id="musicProgress"></i></div>
   </aside>
   <div class="mobile-controls" id="joystick-container" aria-label="Controle de movimento">
@@ -616,32 +185,23 @@
   </div>
 
   <section class="modal" id="contact">
-    <article class="dialog" style="max-width:980px"><button class="close">×</button><span class="eyebrow">MONITOR
-        ULTRAWIDE / PROJETO EM DESTAQUE</span>
+    <article class="dialog" style="max-width:980px"><button class="close">×</button><span class="eyebrow">MONITOR ULTRAWIDE / PROJETO EM DESTAQUE</span>
       <h2>Gestão para Salva-Vidas - Corpo de Bombeiros Militar de Santa Catarina</h2>
       <div class="salva-layout">
         <div class="salva-hero"><span class="eyebrow" style="color:#ffe4b5">SISTEMA INSTITUCIONAL</span>
           <h3 style="font-size:28px;margin:14px 0">Gestão para Salva-Vidas</h3>
-          <p style="color:white;max-width:320px">Ambiente oficial para controle de turnos, postos e informações
-            operacionais.</p>
+          <p style="color:white;max-width:320px">Ambiente oficial para controle de turnos, postos e informações operacionais.</p>
           <p style="font-size:12px;color:#dce8fa">Corpo de Bombeiros Militar de Santa Catarina</p>
         </div>
         <div class="login"><span class="eyebrow">ACESSO</span>
           <h3 style="font-size:25px;margin:14px 0">Entre para continuar</h3>
-          <p>O cadastro do Guarda-Vidas é realizado pela supervisão. Use seu CPF e senha para acessar.</p><button
-            type="button">Acessar sistema</button>
-          <div class="links" style="margin-top:16px"><a class="link" target="_blank"
-              href="https://github.com/EduardoLopesdaSilva" style="color:#10213b">GitHub</a><a class="link"
-              target="_blank" href="https://www.linkedin.com/in/eduardo-lopes-da-silva-5028a32b1"
-              style="color:#10213b">LinkedIn</a><a class="link" href="mailto:eduardo.rudolf008@gmail.com"
-              style="color:#10213b">E-mail</a><a class="link" target="_blank" href="https://wa.me/5548999431112"
-              style="color:#10213b">WhatsApp</a></div>
+          <p>O cadastro do Guarda-Vidas é realizado pela supervisão. Use seu CPF e senha para acessar.</p><button type="button">Acessar sistema</button>
+          <div class="links" style="margin-top:16px"><a class="link" target="_blank" href="https://github.com/EduardoLopesdaSilva" style="color:#10213b">GitHub</a><a class="link" target="_blank" href="https://www.linkedin.com/in/eduardo-lopes-da-silva-5028a32b1" style="color:#10213b">LinkedIn</a><a class="link" href="mailto:eduardo.rudolf008@gmail.com" style="color:#10213b">E-mail</a><a class="link" target="_blank" href="https://wa.me/5548999431112" style="color:#10213b">WhatsApp</a></div>
         </div>
       </div>
     </article>
   </section>
 
-  <!-- Modais Air Mail / Vintage: Cama -> Trajetória, Sofá -> Sobre Mim & Projetos, Armário -> Skills -->
   <section class="modal vintage-modal" id="about">
     <article class="dialog vintage-card"><button class="close" aria-label="Fechar cartão">×</button>
       <div class="vintage-copy">
@@ -675,22 +235,10 @@
         <div class="airmail-title">CADERNO DE CAMPO · SKILLS</div>
         <p>Ferramentas que fazem parte da jornada de Eduardo, combinando desenvolvimento, banco de dados e prototipagem física.</p>
         <div class="grid">
-          <div class="card">
-            <h3>Front-end</h3><span class="tag">HTML</span><span class="tag">CSS</span><span
-              class="tag">JavaScript</span><span class="tag">React.js</span><span class="tag">Hooks</span><span class="tag">Context API</span><span class="tag">Tailwind</span>
-          </div>
-          <div class="card">
-            <h3>Back-end</h3><span class="tag">Java</span><span class="tag">Spring Boot</span><span class="tag">APIs
-              REST</span><span class="tag">JWT</span><span class="tag">Maven</span>
-          </div>
-          <div class="card">
-            <h3>Banco de Dados</h3><span class="tag">MySQL</span><span class="tag">Modelagem</span><span
-              class="tag">CRUD</span><span class="tag">Relatórios</span>
-          </div>
-          <div class="card">
-            <h3>Hardware / IoT</h3><span class="tag">Arduino Uno</span><span class="tag">Sensores</span><span
-              class="tag">Automação</span><span class="tag">Eletroeletrônica</span>
-          </div>
+          <div class="card"><h3>Front-end</h3><span class="tag">HTML</span><span class="tag">CSS</span><span class="tag">JavaScript</span><span class="tag">React.js</span><span class="tag">Hooks</span><span class="tag">Context API</span><span class="tag">Tailwind</span></div>
+          <div class="card"><h3>Back-end</h3><span class="tag">Java</span><span class="tag">Spring Boot</span><span class="tag">APIs REST</span><span class="tag">JWT</span><span class="tag">Maven</span></div>
+          <div class="card"><h3>Banco de Dados</h3><span class="tag">MySQL</span><span class="tag">Modelagem</span><span class="tag">CRUD</span><span class="tag">Relatórios</span></div>
+          <div class="card"><h3>Hardware / IoT</h3><span class="tag">Arduino Uno</span><span class="tag">Sensores</span><span class="tag">Automação</span><span class="tag">Eletroeletrônica</span></div>
         </div>
       </div>
       <aside class="vintage-art" aria-hidden="true"><div class="map-lines"></div></aside>
@@ -700,26 +248,13 @@
   <section class="modal" id="projects">
     <article class="dialog"><button class="close">×</button><span class="eyebrow">PRATELEIRA / PROJETOS</span>
       <h2>Construídos para resolver</h2>
-      <div class="project"><small>01 — FULL STACK</small>
-        <h3>Salva-Vidas</h3>
-        <p>Gestão para Guarda-Vidas: React, Java e Spring Boot. Controle de turnos e geolocalização.</p>
-      </div>
-      <div class="project"><small>02 — SENAI</small>
-        <h3>Biblioteca e Salas</h3>
-        <p>Sistema de reservas com privacidade e controle de administradores.</p>
-      </div>
-      <div class="project"><small>03 — HARDWARE / IOT</small>
-        <h3>Dispositivo Educativo</h3>
-        <p>Labirinto controlado por servos e Arduino para ensinar física e lógica.</p>
-      </div>
+      <div class="project"><small>01 — FULL STACK</small><h3>Salva-Vidas</h3><p>Gestão para Guarda-Vidas: React, Java e Spring Boot. Controle de turnos e geolocalização.</p></div>
+      <div class="project"><small>02 — SENAI</small><h3>Biblioteca e Salas</h3><p>Sistema de reservas com privacidade e controle de administradores.</p></div>
+      <div class="project"><small>03 — HARDWARE / IOT</small><h3>Dispositivo Educativo</h3><p>Labirinto controlado por servos e Arduino para ensinar física e lógica.</p></div>
       <h3>Próximas aplicações</h3>
       <div class="slots">
-        <div class="slot">Adicione a imagem do site aqui</div>
-        <div class="slot">Adicione a imagem do site aqui</div>
-        <div class="slot">Adicione a imagem do site aqui</div>
-        <div class="slot">Adicione a imagem do site aqui</div>
-        <div class="slot">Adicione a imagem do site aqui</div>
-        <div class="slot">Adicione a imagem do site aqui</div>
+        <div class="slot">Adicione a imagem do site aqui</div><div class="slot">Adicione a imagem do site aqui</div><div class="slot">Adicione a imagem do site aqui</div>
+        <div class="slot">Adicione a imagem do site aqui</div><div class="slot">Adicione a imagem do site aqui</div><div class="slot">Adicione a imagem do site aqui</div>
       </div>
     </article>
   </section>
@@ -727,27 +262,15 @@
   <script type="module">
     import * as THREE from 'three';
     import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
-    import { EffectComposer } from 'three/addons/postprocessing/EffectComposer.js';
-    import { RenderPass } from 'three/addons/postprocessing/RenderPass.js';
-    import { UnrealBloomPass } from 'three/addons/postprocessing/UnrealBloomPass.js';
 
-    // Detecção de Dispositivo e Otimização WebGL (FPS)
     const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || (window.innerWidth <= 768);
     const highDPI = window.devicePixelRatio > 1.75;
 
-    // Renderizador com Antialiasing Condicional e Fail-Safe
     const scene = new THREE.Scene();
     scene.background = new THREE.Color(0x1a1a1a);
+    scene.add(new THREE.AmbientLight(0xffffff, 0.5));
 
-    // Iluminação Universal Garantida (Zero Tela Preta)
-    const universalAmbient = new THREE.AmbientLight(0xffffff, 1.2);
-    scene.add(universalAmbient);
-
-    const renderer = new THREE.WebGLRenderer({
-      antialias: !(isMobile && highDPI),
-      alpha: false,
-      powerPreference: 'high-performance'
-    });
+    const renderer = new THREE.WebGLRenderer({ antialias: !(isMobile && highDPI), alpha: false, powerPreference: 'high-performance' });
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, isMobile ? 1.5 : 2));
     renderer.setSize(window.innerWidth, window.innerHeight);
     renderer.shadowMap.enabled = true;
@@ -769,13 +292,10 @@
     controls.minDistance = 2;
     controls.maxDistance = 25;
 
-    // Gestão Eficiente de Materiais Partilhados
     const matCache = new Map();
     const mat = (color, rough = .42, metal = .03) => {
       const key = `${color}_${rough}_${metal}`;
-      if (!matCache.has(key)) {
-        matCache.set(key, new THREE.MeshStandardMaterial({ color, roughness: rough, metalness: metal }));
-      }
+      if (!matCache.has(key)) matCache.set(key, new THREE.MeshStandardMaterial({ color, roughness: rough, metalness: metal }));
       return matCache.get(key);
     };
 
@@ -790,28 +310,23 @@
       m.position.set(x, y, z);
       m.castShadow = m.receiveShadow = true;
       scene.add(m);
-      if (modal) {
-        m.userData = { modal, emissive: 0 };
-        interact.push(m);
-      }
+      if (modal) { m.userData = { modal, emissive: 0 }; interact.push(m); }
       if (solid) colliders.push(new THREE.Box3().setFromObject(m));
       return m;
     };
 
-    // Quarto em L (Paredes Traseira e Esquerda)
+    // Quarto
     const floor = box('Piso', 0, -.15, 0, 20, .3, 20, floorMat);
     floor.receiveShadow = true;
-
     const wallHeight = 9, wallY = wallHeight / 2;
     box('Parede traseira', 0, wallY, -9.85, 20, wallHeight, .25, wallMat);
     box('Parede esquerda', -9.85, wallY, 0, .25, wallHeight, 20, wallMat);
 
-    // Janela e Cortinas
     box('Janela', -9.68, 5.2, -2.2, .06, 3.5, 4.4, new THREE.MeshStandardMaterial({ color: 0xb8dff0, emissive: 0xa7d8ff, emissiveIntensity: .45, roughness: .25, metalness: .08 }), undefined, false);
     box('Cortina', -9.55, 5.2, -4.25, .12, 4.0, .72, mat(0xe8dfd5, .48), undefined, false);
     box('Cortina', -9.55, 5.2, -.15, .12, 4.0, .72, mat(0xe8dfd5, .48), undefined, false);
 
-    // Cama, Tapete, Mesa e Monitor
+    // Cama, mesa e monitor
     box('Tapete da Cama', 1.2, .02, -5.2, 7.4, .08, 7.6, mat(0xcabfae));
     box('Cama', 1.8, 1, -5.25, 5.5, 1.65, 6.7, mat(0xbda98f), 'about');
     box('Cabeceira', 1.8, 2.4, -8.3, 5.7, 2.5, .24, woodMat);
@@ -825,12 +340,11 @@
     box('Tela UltraWide', -5.5, 3.8, -8.79, 5.08, 2.18, .04, monitorScreenMaterial);
     box('Suporte', -5.5, 2.65, -8.9, .16, 1.2, .18, mat(0x1d222a, .3, .6));
 
-    // Cadeira Gamer em 1ª Pessoa / Cinematográfica
+    // Cadeira gamer
     const chairBlack = mat(0x0b0d12, .35, .12), chairAccent = mat(0x252b38, .42, .1), chairGroup = new THREE.Group();
     chairGroup.position.set(-5.5, 0, -6.35);
     chairGroup.rotation.y = .72;
     scene.add(chairGroup);
-
     function chairPart(name, x, y, z, w, h, d, material) {
       const mesh = new THREE.Mesh(new THREE.BoxGeometry(w, h, d), material);
       mesh.name = name;
@@ -851,7 +365,7 @@
     chairGroup.children.forEach(part => { part.userData = { modal: 'chair' }; interact.push(part); });
     colliders.push(new THREE.Box3().setFromCenterAndSize(new THREE.Vector3(-5.5, 1.6, -6.35), new THREE.Vector3(2.35, 3.4, 2.6)));
 
-    // Sofá Low-Poly (Air Mail / Sobre Mim & Projetos)
+    // Sofá
     const sofaFabric = mat(0x53616b, .9, 0), sofaDark = mat(0x303a43, .8, .05), sofaX = 2.6, sofaZ = 6.8;
     box('Tapete do Sofá', sofaX, .025, sofaZ, 6.8, .06, 4.6, mat(0xb9ae9e), undefined, false);
     box('Sofá - Base', sofaX, .62, sofaZ, 4.7, .78, 2.05, sofaDark, 'vintage');
@@ -861,7 +375,7 @@
     box('Sofá - Braço Direito', sofaX + 2.15, 1.2, sofaZ + .05, .45, 1.12, 2.02, sofaDark);
     [-1.15, 0, 1.15].forEach(offset => box('Sofá - Almofada', sofaX + offset, 1.38, sofaZ + .12, 1.25, .38, 1.25, sofaFabric));
 
-    // Armários (Air Mail / Skills)
+    // Armários e prateleira
     box('Armário Madeira', 6.7, 3.1, -8.3, 3.5, 6.2, .85, woodMat, 'skills');
     box('Portas', 6.7, 3.15, -7.83, 3.1, 4.7, .07, mat(0x926a4a));
     box('Armário Branco', -7.75, 3.05, 5.35, 2.3, 6.1, 1.05, mat(0xf1eee7), 'skills');
@@ -869,7 +383,7 @@
     box('Prateleira', -1.8, 4.55, -8.85, 4.3, .18, .65, woodMat, 'projects');
     [-3.4, -2.95, -2.5].forEach((x, i) => box('Livro', x, 4.95, -8.84, .33, .65 + i * .07, .35, mat([0x4d79a8, 0x8755a7, 0xcf745c][i]), undefined, false));
 
-    // Plantas Decorativas
+    // Plantas (CORRIGIDO: função fechada corretamente e agora é chamada)
     function plant(x, z, scale = 1, playable = false) {
       const pot = box('Vaso', x, .45, z, .65, .8, .65, mat(0x926e55), playable ? 'music' : undefined, false);
       if (playable) pot.userData.isPlant = true;
@@ -879,7 +393,13 @@
         leaf.castShadow = true;
         scene.add(leaf);
         if (playable) { leaf.userData = { modal: 'music', isPlant: true }; interact.push(leaf); }
-       // Texturas Embutidas & Geradores Procedurais Fallback (Zero Tela Preta)
+      }
+    }
+    plant(8.5, 7.5, 1, true);   // planta clicável: liga/desliga o lofi
+    plant(-8.5, -5.5, 1.1);
+    plant(8.5, 5, .9);
+
+    // Texturas dos quadros
     const textureLoader = new THREE.TextureLoader();
 
     function createBrasilCanvas() {
@@ -890,27 +410,18 @@
       ctx.fillRect(0, 0, 512, 512);
       ctx.save();
       ctx.translate(256, 250);
-
-      // 5 Estrelas verdes no topo em arco
       ctx.fillStyle = '#009C3B';
-      const starRadiusOuter = 15, numStars = 5;
-      const startAngle = -Math.PI * 0.72;
-      const angleStep = (Math.PI * 0.44) / (numStars - 1);
+      const starR = 15, numStars = 5, startAngle = -Math.PI * 0.72, angleStep = (Math.PI * 0.44) / (numStars - 1);
       for (let i = 0; i < numStars; i++) {
         const angle = startAngle + i * angleStep;
-        const sx = Math.cos(angle) * 155;
-        const sy = Math.sin(angle) * 155 - 45;
-        ctx.save(); ctx.translate(sx, sy); ctx.beginPath();
+        ctx.save(); ctx.translate(Math.cos(angle) * 155, Math.sin(angle) * 155 - 45); ctx.beginPath();
         for (let s = 0; s < 5; s++) {
           const a = (s * 4 * Math.PI) / 5 - Math.PI / 2;
-          const x = Math.cos(a) * starRadiusOuter;
-          const y = Math.sin(a) * starRadiusOuter;
+          const x = Math.cos(a) * starR, y = Math.sin(a) * starR;
           if (s === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
         }
         ctx.closePath(); ctx.fill(); ctx.restore();
       }
-
-      // Escudo CBF
       const w = 180, h = 220;
       ctx.beginPath();
       ctx.moveTo(0, -h / 2);
@@ -920,22 +431,12 @@
       ctx.lineWidth = 14; ctx.strokeStyle = '#FFDF00'; ctx.stroke();
       ctx.lineWidth = 6; ctx.strokeStyle = '#002776'; ctx.stroke();
       ctx.fillStyle = '#002776'; ctx.fill();
-
-      // Cruz Branca
       ctx.fillStyle = '#FFFFFF';
       ctx.fillRect(-20, -60, 40, 120);
       ctx.fillRect(-60, -20, 120, 40);
-      ctx.beginPath(); ctx.moveTo(-32, -60); ctx.lineTo(32, -60); ctx.lineTo(20, -42); ctx.lineTo(-20, -42); ctx.closePath(); ctx.fill();
-      ctx.beginPath(); ctx.moveTo(-32, 60); ctx.lineTo(32, 60); ctx.lineTo(20, 42); ctx.lineTo(-20, 42); ctx.closePath(); ctx.fill();
-      ctx.beginPath(); ctx.moveTo(-60, -32); ctx.lineTo(-60, 32); ctx.lineTo(-42, 20); ctx.lineTo(-42, -20); ctx.closePath(); ctx.fill();
-      ctx.beginPath(); ctx.moveTo(60, -32); ctx.lineTo(60, 32); ctx.lineTo(42, 20); ctx.lineTo(42, -20); ctx.closePath(); ctx.fill();
-
-      // Texto "CBF"
       ctx.fillStyle = '#002776'; ctx.font = 'bold 26px "Outfit", sans-serif';
       ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
       ctx.fillText('CBF', 0, 0);
-
-      // Texto "BRASIL"
       ctx.fillStyle = '#009C3B'; ctx.font = '900 40px "Outfit", sans-serif';
       ctx.fillText('BRASIL', 0, h / 2 + 42);
       ctx.restore();
@@ -948,88 +449,78 @@
       const ctx = canvas.getContext('2d');
       ctx.fillStyle = '#111111'; ctx.fillRect(0, 0, 512, 512);
       ctx.save(); ctx.translate(256, 256);
-
       const w = 210, h = 260;
       ctx.beginPath();
       ctx.moveTo(0, -h / 2);
       ctx.bezierCurveTo(w / 2, -h / 2, w / 2 + 15, h / 4, 0, h / 2);
       ctx.bezierCurveTo(-w / 2 - 15, h / 4, -w / 2, -h / 2, 0, -h / 2);
       ctx.closePath();
-
       ctx.save(); ctx.clip();
       ctx.fillStyle = '#FFFFFF'; ctx.fillRect(-w, -h, w * 2, h * 2);
       ctx.fillStyle = '#000000';
       for (let i = -400; i < 400; i += 48) {
         ctx.beginPath(); ctx.moveTo(i, -h); ctx.lineTo(i + 24, -h); ctx.lineTo(i - 96, h); ctx.lineTo(i - 120, h); ctx.closePath(); ctx.fill();
       }
-
-      // Círculo central com Figueira
       ctx.beginPath(); ctx.arc(0, 10, 72, 0, Math.PI * 2); ctx.fillStyle = '#FFFFFF'; ctx.fill();
       ctx.lineWidth = 5; ctx.strokeStyle = '#000000'; ctx.stroke();
-
-      // Desenho da árvore (figueira)
       ctx.fillStyle = '#009B3A';
       ctx.fillRect(-7, 15, 14, 38);
       ctx.beginPath(); ctx.arc(0, -15, 30, 0, Math.PI * 2); ctx.arc(-20, 0, 22, 0, Math.PI * 2); ctx.arc(20, 0, 22, 0, Math.PI * 2); ctx.fill();
-
-      // Faixa FFC
       ctx.rotate(-0.22);
       ctx.fillStyle = '#FFFFFF'; ctx.fillRect(-80, -4, 160, 34);
       ctx.lineWidth = 3; ctx.strokeStyle = '#000000'; ctx.strokeRect(-80, -4, 160, 34);
       ctx.fillStyle = '#000000'; ctx.font = '900 26px "Outfit", sans-serif'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
       ctx.fillText('FFC', 0, 13);
       ctx.restore();
-
       ctx.lineWidth = 10; ctx.strokeStyle = '#FFFFFF'; ctx.stroke();
       ctx.lineWidth = 4; ctx.strokeStyle = '#000000'; ctx.stroke();
       ctx.restore();
       return canvas;
     }
 
-    function createSafeTexture(canvasFallback, base64Url) {
+    // Começa com o desenho procedural e troca pela imagem real quando ela carregar
+    function createSafeTexture(canvasFallback, imageUrl) {
       const texture = new THREE.CanvasTexture(canvasFallback);
       texture.colorSpace = THREE.SRGBColorSpace;
-      if (base64Url) {
+      if (imageUrl) {
         textureLoader.load(
-          base64Url,
-          (loadedTex) => {
-            texture.image = loadedTex.image;
-            texture.needsUpdate = true;
-          },
+          imageUrl,
+          loaded => { texture.image = loaded.image; texture.needsUpdate = true; },
           undefined,
-          (err) => console.warn('Usando fallback procedural 2D para quadro:', err)
+          err => console.warn('Usando fallback procedural para o quadro:', err)
         );
       }
       return texture;
     }
 
-    const brasilCanvas = createBrasilCanvas();
-    const figueirenseCanvas = createFigueirenseCanvas();
-    const brasilTexture = createSafeTexture(brasilCanvas);
-    const figueirenseTexture = createSafeTexture(figueirenseCanvas);
+    const brasilTexture = createSafeTexture(createBrasilCanvas(), 'data:image/png;base64,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');
+    const figueirenseTexture = createSafeTexture(createFigueirenseCanvas(), 'data:image/png;base64,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');
 
     function poster(x, y, z, texture, backgroundColor, label) {
       const width = 2.25, height = 2.35, edge = .11, frame = mat(0x090807, .3, .2);
       box(label + ' - fundo', x, y, z, width, height, .09, mat(backgroundColor, .55, .04), undefined, false);
       const art = new THREE.Mesh(new THREE.PlaneGeometry(1, 1), new THREE.MeshStandardMaterial({ map: texture, transparent: true, roughness: .58, metalness: .05 }));
       art.name = label + ' - textura'; art.position.set(x, y, z + .06); art.castShadow = true; scene.add(art);
-      const resizeArtwork = () => { const aspect = texture.image?.width / texture.image?.height || 1; const fit = Math.min(width * .84 / aspect, height * .84); art.scale.set(fit * aspect, fit, 1); };
-      if (texture.image?.complete) resizeArtwork(); else texture.onUpdate = resizeArtwork;
+      const resizeArtwork = () => {
+        const img = texture.image;
+        const aspect = (img && (img.naturalWidth || img.width)) ? (img.naturalWidth || img.width) / (img.naturalHeight || img.height) : 1;
+        const fit = Math.min(width * .84 / aspect, height * .84);
+        art.scale.set(fit * aspect, fit, 1);
+      };
+      resizeArtwork();
+      texture.onUpdate = resizeArtwork;
       box('Moldura superior', x, y + height / 2 + edge / 2, z + .07, width + edge * 2, edge, .15, frame, undefined, false);
       box('Moldura inferior', x, y - height / 2 - edge / 2, z + .07, width + edge * 2, edge, .15, frame, undefined, false);
       box('Moldura esquerda', x - width / 2 - edge / 2, y, z + .07, edge, height + edge * 2, .15, frame, undefined, false);
       box('Moldura direita', x + width / 2 + edge / 2, y, z + .07, edge, height + edge * 2, .15, frame, undefined, false);
     }
 
-    // Instanciação dos Quadros na Parede Traseira sobre o Armário
     poster(4.8, 7.2, -8.88, brasilTexture, 0xfff8d6, 'Quadro Seleção Brasileira');
     poster(7.6, 7.2, -8.88, figueirenseTexture, 0x111111, 'Quadro Figueirense FC');
 
-
-
-    // Iluminação Otimizada (Mapas de sombra leves no Mobile: 512px)
+    // Iluminação
     const leds = [];
-    function strip(x, y, z, w, h, d) { const m = box('Fita LED', x, y, z, w, h, d, ledMat, undefined, false); leds.push(m); }
+    function strip(x, y, z, w, h, d) { leds.push(box('Fita LED', x, y, z, w, h, d, ledMat, undefined, false)); }
     strip(-5.5, 2.45, -8.57, 5.35, .07, .08);
     strip(-1.8, 4.37, -8.8, 4.4, .07, .08);
     strip(sofaX, .27, sofaZ - .98, 4.35, .06, .08);
@@ -1037,8 +528,7 @@
     strip(0, 8.88, -9.57, 19, .07, .08);
     strip(-9.57, 8.88, 0, .08, .07, 19);
 
-    const ambient = new THREE.AmbientLight(0xffead0, .75);
-    scene.add(ambient);
+    scene.add(new THREE.AmbientLight(0xffead0, .75));
 
     const sun = new THREE.DirectionalLight(0xd3ebff, 1.1);
     sun.position.set(-8, 12, 5);
@@ -1046,12 +536,9 @@
     const shadowRes = isMobile ? 512 : 1024;
     sun.shadow.mapSize.width = shadowRes;
     sun.shadow.mapSize.height = shadowRes;
-    sun.shadow.camera.left = -12;
-    sun.shadow.camera.right = 12;
-    sun.shadow.camera.top = 12;
-    sun.shadow.camera.bottom = -12;
-    sun.shadow.camera.near = .5;
-    sun.shadow.camera.far = 35;
+    sun.shadow.camera.left = -12; sun.shadow.camera.right = 12;
+    sun.shadow.camera.top = 12; sun.shadow.camera.bottom = -12;
+    sun.shadow.camera.near = .5; sun.shadow.camera.far = 35;
     sun.shadow.bias = -.0003;
     scene.add(sun);
 
@@ -1061,7 +548,7 @@
     ledsLight.forEach(x => scene.add(x));
     box('Interruptor', -9.65, 1.75, .6, .08, .55, .42, mat(0xf1f3f5), undefined, false);
 
-    // Avatar de Blocos ("Vinyl Toy")
+    // Avatar
     const vinyl = color => new THREE.MeshPhysicalMaterial({ color, roughness: .42, metalness: .03, clearcoat: .12, clearcoatRoughness: .4 });
     const player = new THREE.Group();
     player.position.set(-4.4, .12, 2.2);
@@ -1097,14 +584,13 @@
       document.querySelector('#legend').textContent = 'Sentando e preparando a estação...';
     }
 
-    // Eventos de Teclado (Desktop)
     addEventListener('keydown', e => {
       if (e.code === 'Space' || e.code === 'KeyE') { e.preventDefault(); performAction(); return; }
       keys[e.code] = true;
     });
     addEventListener('keyup', e => keys[e.code] = false);
 
-    // JOYSTICK TOUCH ANALÓGICO 360° (Padrão Roblox)
+    // Joystick touch
     const isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
     if (isTouchDevice) document.body.classList.add('touch');
 
@@ -1120,77 +606,51 @@
       joystickBase.classList.add('active');
       updateJoystickPosition(touch);
     }
-
     function handleJoystickMove(e) {
       if (activeTouchId === null) return;
       let touch = null;
       if (e.changedTouches) {
         for (let i = 0; i < e.changedTouches.length; i++) {
-          if (e.changedTouches[i].identifier === activeTouchId) {
-            touch = e.changedTouches[i];
-            break;
-          }
+          if (e.changedTouches[i].identifier === activeTouchId) { touch = e.changedTouches[i]; break; }
         }
-      } else {
-        touch = e;
-      }
+      } else touch = e;
       if (touch) updateJoystickPosition(touch);
     }
-
     function handleJoystickEnd(e) {
       if (activeTouchId === null) return;
       if (e.changedTouches) {
         let touched = false;
         for (let i = 0; i < e.changedTouches.length; i++) {
-          if (e.changedTouches[i].identifier === activeTouchId) {
-            touched = true;
-            break;
-          }
+          if (e.changedTouches[i].identifier === activeTouchId) { touched = true; break; }
         }
         if (!touched) return;
       }
       activeTouchId = null;
-      joystickVector.x = 0;
-      joystickVector.y = 0;
+      joystickVector.x = 0; joystickVector.y = 0;
       joystickBase.classList.remove('active');
       joystickThumb.style.transform = 'translate(-50%, -50%)';
     }
-
     function updateJoystickPosition(touch) {
       const rect = joystickBase.getBoundingClientRect();
-      const centerX = rect.left + rect.width / 2;
-      const centerY = rect.top + rect.height / 2;
-      const deltaX = touch.clientX - centerX;
-      const deltaY = touch.clientY - centerY;
+      const deltaX = touch.clientX - (rect.left + rect.width / 2);
+      const deltaY = touch.clientY - (rect.top + rect.height / 2);
       const maxRadius = rect.width * 0.35;
       const distance = Math.hypot(deltaX, deltaY);
-
-      let clampedX = deltaX;
-      let clampedY = deltaY;
-      if (distance > maxRadius) {
-        clampedX = (deltaX / distance) * maxRadius;
-        clampedY = (deltaY / distance) * maxRadius;
-      }
-
+      let clampedX = deltaX, clampedY = deltaY;
+      if (distance > maxRadius) { clampedX = (deltaX / distance) * maxRadius; clampedY = (deltaY / distance) * maxRadius; }
       joystickThumb.style.transform = `translate(calc(-50% + ${clampedX}px), calc(-50% + ${clampedY}px))`;
-
-      // Vetor normalizado de -1.0 a 1.0 para velocidade e rotação em 360 graus
       joystickVector.x = clampedX / maxRadius;
       joystickVector.y = clampedY / maxRadius;
     }
 
-    // Registra eventos Touch
     joystickBase.addEventListener('touchstart', e => { e.preventDefault(); e.stopPropagation(); handleJoystickStart(e); }, { passive: false });
-    window.addEventListener('touchmove', e => { if (activeTouchId !== null) { handleJoystickMove(e); } }, { passive: false });
-    window.addEventListener('touchend', e => { if (activeTouchId !== null) { handleJoystickEnd(e); } }, { passive: false });
-    window.addEventListener('touchcancel', e => { if (activeTouchId !== null) { handleJoystickEnd(e); } }, { passive: false });
-
-    // Suporte para Mouse (Simulação no Desktop)
+    window.addEventListener('touchmove', e => { if (activeTouchId !== null) handleJoystickMove(e); }, { passive: false });
+    window.addEventListener('touchend', e => { if (activeTouchId !== null) handleJoystickEnd(e); }, { passive: false });
+    window.addEventListener('touchcancel', e => { if (activeTouchId !== null) handleJoystickEnd(e); }, { passive: false });
     joystickBase.addEventListener('mousedown', e => { e.preventDefault(); handleJoystickStart(e); });
     window.addEventListener('mousemove', e => { if (activeTouchId === 'mouse') handleJoystickMove(e); });
     window.addEventListener('mouseup', e => { if (activeTouchId === 'mouse') handleJoystickEnd(e); });
 
-    // Orientação do Dispositivo (Aviso Paisagem Obrigatório)
     const rotateOverlay = document.querySelector('#rotateOverlay');
     function syncOrientation() {
       const portrait = matchMedia('(max-width: 768px) and (orientation: portrait)').matches;
@@ -1201,7 +661,7 @@
     screen.orientation?.addEventListener?.('change', syncOrientation);
     syncOrientation();
 
-    // Raycaster para Seleção de Objetos
+    // Seleção de objetos
     function pointer(e) {
       const b = renderer.domElement.getBoundingClientRect();
       mouse.set((e.clientX - b.left) / b.width * 2 - 1, -(e.clientY - b.top) / b.height * 2 + 1);
@@ -1209,7 +669,7 @@
       return ray.intersectObjects(interact)[0]?.object;
     }
     renderer.domElement.addEventListener('pointermove', e => {
-      let q = pointer(e);
+      const q = pointer(e);
       if (hover && hover !== q) { hover.material.emissive?.setHex(0); hover.material.emissiveIntensity = 0; }
       hover = q;
       if (q) { hover.material.emissive?.setHex(lightColor); hover.material.emissiveIntensity = .6; }
@@ -1219,28 +679,28 @@
       const q = pointer(e);
       if (q) {
         if (q.userData.modal === 'chair' && (deskSequence === 'idle' || deskSequence === 'cue')) startDeskSequence();
-        else if (q.userData.modal) open(q.userData.modal);
+        else if (q.userData.modal === 'music') toggleMusic();
+        else if (q.userData.modal && q.userData.modal !== 'chair') open(q.userData.modal);
       } else {
         ray.setFromCamera(mouse, camera);
-        const ground = ray.intersectObject(scene.children.find(x => x.name === 'Piso'));
+        const ground = ray.intersectObject(floor)[0];
         if (ground) target = ground.point;
       }
     });
 
-    // Colisão Física com Deslize por Eixo
-    function makeAvatarBox(position) { return avatarBox.set(new THREE.Vector3(position.x - avatarHalf.x, .14, position.z - avatarHalf.z), new THREE.Vector3(position.x + avatarHalf.x, 3.55, position.z + avatarHalf.z)); }
-    function collides(position) { const b = makeAvatarBox(position); return colliders.some(obstacleBox => b.intersectsBox(obstacleBox)); }
+    // Colisão
+    function makeAvatarBox(p) { return avatarBox.set(new THREE.Vector3(p.x - avatarHalf.x, .14, p.z - avatarHalf.z), new THREE.Vector3(p.x + avatarHalf.x, 3.55, p.z + avatarHalf.z)); }
+    function collides(p) { const b = makeAvatarBox(p); return colliders.some(o => b.intersectsBox(o)); }
     function moveWithCollision(delta) {
       const tryX = player.position.clone(); tryX.x += delta.x; if (!collides(tryX)) player.position.x = tryX.x;
       const tryZ = player.position.clone(); tryZ.z += delta.z; if (!collides(tryZ)) player.position.z = tryZ.z;
     }
 
-    // Sims Bubble - Frases & Atualização Eficiente via GPU (transform3d)
+    // Balão estilo Sims
     const bubble = document.querySelector('#bubble'), guide = document.querySelector('#guide');
     const simsBubble = document.querySelector('#simsBubble');
     const simsPhrases = ['Eu sou Eduardo Lopes da Silva', 'Estou com Fome!', 'Cadê minha Cueca?', 'Hora de codar mais um pouco...', 'Será que ligaram o Lofi?', 'Preciso de um café bem forte!'];
     let simsPhraseIndex = 0;
-
     function rotateSimsPhrase() {
       simsBubble.textContent = simsPhrases[simsPhraseIndex];
       const duration = simsPhraseIndex === 0 ? 12000 : 6000;
@@ -1254,14 +714,13 @@
       const isVisible = speechWorld.z > -1 && speechWorld.z < 1;
       simsBubble.style.opacity = isVisible ? '1' : '0';
       if (isVisible) {
-        const screenX = (speechWorld.x * 0.5 + 0.5) * window.innerWidth;
-        const screenY = (-speechWorld.y * 0.5 + 0.5) * window.innerHeight;
-        // Evita reflows pesados utilizando GPU composition
-        simsBubble.style.transform = `translate3d(${screenX}px, ${screenY}px, 0) translate(-50%, -100%)`;
+        const sx = (speechWorld.x * 0.5 + 0.5) * window.innerWidth;
+        const sy = (-speechWorld.y * 0.5 + 0.5) * window.innerHeight;
+        simsBubble.style.transform = `translate3d(${sx}px, ${sy}px, 0) translate(-50%, -100%)`;
       }
     }
 
-    // Gerenciamento de Modais & Foco de Câmera Cinematográfico
+    // Modais e foco de câmera
     let modalFocus = null;
     const vintageFocuses = { about: new THREE.Vector3(1.8, 1.8, -5.25), vintage: new THREE.Vector3(sofaX, 1.25, sofaZ), skills: new THREE.Vector3(6.7, 3.05, -8.3) };
 
@@ -1276,20 +735,18 @@
       guide.classList.add('talk');
       bubble.textContent = 'Boa escolha! Veja este espaço.';
     }
-
     function close(el) {
       const vintage = el.classList.contains('vintage-modal');
       el.classList.remove('open');
       if (vintage) { modalFocus = null; controls.enabled = true; }
       if (!document.querySelector('.modal.open')) { guide.classList.remove('talk'); bubble.textContent = 'WASD ou setas para caminhar.'; }
     }
-
     document.querySelectorAll('.close').forEach(x => x.onclick = () => close(x.closest('.modal')));
     document.querySelectorAll('.modal').forEach(x => x.onclick = e => { if (e.target === x) close(x); });
     addEventListener('keydown', e => { if (e.key === 'Escape') { const m = document.querySelector('.modal.open'); if (m) close(m); } });
 
-    // Áudio Lo-Fi Sintético Local
-    let audioCtx, master, noise, playing = false, lightOn = true;
+    // Áudio lo-fi sintético
+    let audioCtx, master, noise, playing = false;
     const musicUI = document.querySelector('#musicPlayer'), progress = document.querySelector('#musicProgress');
     function toggleMusic() {
       if (!audioCtx) {
@@ -1319,7 +776,8 @@
     }
     document.querySelector('#musicToggle').onclick = toggleMusic;
 
-    // Proximidade Contextual & Botão AÇÃO
+    // Proximidade e botão AÇÃO
+    const mobileAction = document.querySelector('#btn-acao'), exitComputer = document.querySelector('#exitComputer');
     let nearbyAction = null;
     const actionTargets = [
       { type: 'chair', position: chairGroup.position, range: 2.35, label: 'Pressione AÇÃO para sentar' },
@@ -1346,7 +804,6 @@
       open(nearbyAction.type);
     }
 
-    const mobileAction = document.querySelector('#btn-acao'), exitComputer = document.querySelector('#exitComputer');
     let lastActionInput = 0;
     function triggerMobileAction(event) {
       event.preventDefault(); event.stopPropagation();
@@ -1372,7 +829,7 @@
       document.querySelector('#legend').textContent = 'Controles restaurados — explore o quarto';
     });
 
-    // Temas do Quarto
+    // Temas
     const themes = {
       warm: { wall: 0xf0e2cf, floor: 0xd8c5ad, wood: 0xb17d4d, led: 0xffbb68 },
       sage: { wall: 0xcdd8cb, floor: 0xc8c9bd, wood: 0x594a3c, led: 0xd9f7ff },
@@ -1386,12 +843,11 @@
       if (deskSequence !== 'idle' && deskSequence !== 'cue') return;
       first = !first;
       glassesL.visible = glassesR.visible = first;
-      const b = document.querySelector('#camera');
-      b.textContent = first ? '◉ Voltar à 3ª Pessoa' : '◉ Alternar Câmera';
+      document.querySelector('#camera').textContent = first ? '◉ Voltar à 3ª Pessoa' : '◉ Alternar Câmera';
       document.querySelector('#legend').textContent = first ? '1ª pessoa — mouse para olhar, WASD para andar' : '3ª pessoa — a câmera acompanha Eduardo';
     };
 
-    // Loop Principal de Renderização & Animação
+    // Loop principal
     function loop() {
       requestAnimationFrame(loop);
       const dt = Math.min(.04, clock.getDelta()), time = clock.elapsedTime;
@@ -1402,7 +858,6 @@
       if (!controlsLocked && nearbyAction?.type === 'chair') deskSequence = 'cue';
       else if (!controlsLocked && deskSequence === 'cue') deskSequence = 'idle';
 
-      // Animação da Cadeira / Computador
       if (deskSequence === 'seating') {
         player.position.lerp(seatedPosition, .1);
         player.position.y = THREE.MathUtils.damp(player.position.y, .18, 8, dt);
@@ -1431,25 +886,17 @@
         }
       }
 
-      // Combinação de Teclado (WASD) + Joystick Analógico 360°
       const kbForward = controlsLocked ? 0 : (keys.KeyW || keys.ArrowUp ? 1 : 0) - (keys.KeyS || keys.ArrowDown ? 1 : 0);
       const kbSide = controlsLocked ? 0 : (keys.KeyD || keys.ArrowRight ? 1 : 0) - (keys.KeyA || keys.ArrowLeft ? 1 : 0);
-
       let forwardInput = controlsLocked ? 0 : kbForward + (-joystickVector.y);
-      let sideInput = controlsLocked ? 0 : kbSide + (joystickVector.x);
-
-      // Limita a magnitude do vetor combinado a no máximo 1.0
+      let sideInput = controlsLocked ? 0 : kbSide + joystickVector.x;
       const inputMag = Math.hypot(forwardInput, sideInput);
-      if (inputMag > 1.0) {
-        forwardInput /= inputMag;
-        sideInput /= inputMag;
-      }
+      if (inputMag > 1.0) { forwardInput /= inputMag; sideInput /= inputMag; }
 
       camera.getWorldDirection(cameraForward);
       cameraForward.y = 0;
       cameraForward.normalize();
       cameraRight.crossVectors(cameraForward, new THREE.Vector3(0, 1, 0)).normalize();
-
       moveDirection.copy(cameraForward).multiplyScalar(forwardInput).addScaledVector(cameraRight, sideInput);
 
       if (!controlsLocked && target && player.position.distanceTo(target) > .25) {
@@ -1465,15 +912,11 @@
         const currentSpeed = Math.min(moveDirection.length(), 1.0);
         moveDirection.normalize();
         moveWithCollision(moveDirection.clone().multiplyScalar(dt * 4.48 * currentSpeed));
-
         const desiredAngle = Math.atan2(moveDirection.x, moveDirection.z);
         player.rotation.y = THREE.MathUtils.damp(player.rotation.y, desiredAngle, 13, dt);
-
         const step = Math.sin(time * 14 * currentSpeed) * .62;
-        armL.rotation.x = step;
-        armR.rotation.x = -step;
-        legL.rotation.x = -step;
-        legR.rotation.x = step;
+        armL.rotation.x = step; armR.rotation.x = -step;
+        legL.rotation.x = -step; legR.rotation.x = step;
         head.rotation.z = Math.sin(time * 14 * currentSpeed) * .035;
       } else if (!controlsLocked) {
         armL.rotation.x = THREE.MathUtils.damp(armL.rotation.x, 0, 12, dt);
@@ -1483,11 +926,9 @@
         head.rotation.z = THREE.MathUtils.damp(head.rotation.z, 0, 12, dt);
       }
 
-      // Limite das paredes do quarto
       player.position.x = THREE.MathUtils.clamp(player.position.x, -9, 9);
       player.position.z = THREE.MathUtils.clamp(player.position.z, -9, 9);
 
-      // Câmera & Seguidor
       if (modalFocus) {
         camera.position.lerp(modalFocus.clone().add(new THREE.Vector3(0, 3.05, 5.6)), .1);
         controls.target.lerp(modalFocus, .12);
@@ -1505,7 +946,6 @@
         controls.target.y += 1.85;
       }
 
-      controls.enableZoom = true;
       controls.minDistance = 1.5;
       controls.maxDistance = 30;
 
@@ -1524,7 +964,6 @@
       updateSimsBubble();
       renderer.render(scene, camera);
     }
-
     loop();
 
     window.addEventListener('resize', () => {
