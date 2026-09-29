@@ -128,7 +128,8 @@ body.touch #joystick-container,body.touch .mobile-action{display:block}
 .sims-bubble::after{width:9px;height:9px;bottom:-6px;border-width:2px}
 /* ===== Só mobile/touch: joystick simples de dedo + balão do Sims ainda menor ===== */
 @media (pointer:coarse), (max-width:900px){
-#joystick-container{left:18px;bottom:22px;width:96px;height:96px}
+#joystick-container{display:block;left:18px;bottom:22px;width:96px;height:96px}
+.mobile-action{display:block}
 .joystick-base{border:2px solid rgba(255,255,255,.35);background:rgba(255,255,255,.12);box-shadow:none;backdrop-filter:none}
 .joystick-base.active{border-color:rgba(255,255,255,.7);background:rgba(255,255,255,.22);box-shadow:none}
 .joystick-thumb{width:42px;height:42px;border:0;background:rgba(255,255,255,.8);box-shadow:none}
@@ -430,7 +431,7 @@ if (renderer) {
   addEventListener('keyup', e => keys[e.code] = false);
 
   // ---------- Joystick touch ----------
-  if ('ontouchstart' in window || navigator.maxTouchPoints > 0) document.body.classList.add('touch');
+  if ('ontouchstart' in window || navigator.maxTouchPoints > 0 || isMobile) document.body.classList.add('touch');
   const joyBase = $('#joystickBase'), joyThumb = $('#joystickThumb'), joy = { x: 0, y: 0 };
   let activeTouchId = null;
   const findTouch = e => e.changedTouches ? [...e.changedTouches].find(t => t.identifier === activeTouchId) : e;
